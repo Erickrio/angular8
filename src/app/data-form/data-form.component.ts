@@ -46,12 +46,12 @@ export class DataFormComponent implements OnInit {
   }
 
 
-  // verificaEmailInvalido(campo: string){
-  //   let campoEmail = this.formulario.get('email');
-  //   if(campoEmail.errors){
-  //     return campoEmail.errors['email'] && campoEmail.touched;
-  //   }
-  // }
+  verificaEmailInvalido(campo: string){
+    let campoEmail = this.formulario.get('email');
+    if(campoEmail.errors){
+      return campoEmail.errors['email'] && campoEmail.touched;
+    }
+  }
 
   verificaValidTouched(campo){
    return !this.formulario.get(campo).valid && this.formulario.get(campo).touched;
@@ -59,10 +59,9 @@ export class DataFormComponent implements OnInit {
 
 
   aplicaCssErro(campo){
-    return{
+    return {
       'has-error': this.verificaValidTouched(campo),
       'has-feedback': this.verificaValidTouched(campo)
-
     }
   }
 

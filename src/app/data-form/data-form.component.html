@@ -26,9 +26,14 @@
     </div>
   </div>
 
-  <app-campo-control-erro
-  [mostrarErro]="verificaValidTouched('email')"
-  msgErro="Email é obrigatório.">
+<app-campo-control-erro
+      [mostrarErro]="verificaValidTouched('email')"
+      msgErro="Email é obrigatório.">
+</app-campo-control-erro>
+
+<app-campo-control-erro
+    [mostrarErro]="verificaValidTouched('email')"
+    msgErro="Email é Inválido.">
 </app-campo-control-erro>
 
   <button type="submit" class="btn btn-primary"
