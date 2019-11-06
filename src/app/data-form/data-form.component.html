@@ -10,6 +10,12 @@
      </div>
   </div>
 
+  <app-campo-control-erro
+    [mostrarErro]="verificaValidTouched('nome')"
+    msgErro="Nome é obrigatório.">
+</app-campo-control-erro>
+
+
   <div class="form-group">
     <div class="col-sm-12">
       <label for="email" class="control-label">Email</label>
@@ -19,6 +25,11 @@
         id="email" placeholder="nome@email.com">
     </div>
   </div>
+
+  <app-campo-control-erro
+  [mostrarErro]="verificaValidTouched('email')"
+  msgErro="Email é obrigatório.">
+</app-campo-control-erro>
 
   <button type="submit" class="btn btn-primary"
     >Submit</button>
