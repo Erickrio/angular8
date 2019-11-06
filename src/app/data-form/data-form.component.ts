@@ -34,7 +34,7 @@ export class DataFormComponent implements OnInit {
     this.http .post('https://httpbin.org/post', JSON.stringify(this.formulario.value))
     .subscribe(dados => { console.log(dados);
       //reseta form
-      // this.formulario.reset();
+      this.formulario.reset();
       // this.resetar();
 
     },
@@ -46,15 +46,22 @@ export class DataFormComponent implements OnInit {
   }
 
 
+  // verificaEmailInvalido(campo: string){
+  //   let campoEmail = this.formulario.get('email');
+  //   if(campoEmail.errors){
+  //     return campoEmail.errors['email'] && campoEmail.touched;
+  //   }
+  // }
+
   verificaValidTouched(campo){
-    return !campo.valid && campo.touched;
+   return !this.formulario.get(campo).valid && this.formulario.get(campo).touched;
   }
 
 
   aplicaCssErro(campo){
     return{
       'has-error': this.verificaValidTouched(campo),
-      'has-feedback': this.verificaValidTouched(campo),
+      'has-feedback': this.verificaValidTouched(campo)
 
     }
   }
