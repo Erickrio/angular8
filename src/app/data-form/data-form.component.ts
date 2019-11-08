@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-data-form',
@@ -72,6 +73,62 @@ export class DataFormComponent implements OnInit {
       'has-feedback': this.verificaValidTouched(campo)
     }
   }
+
+
+  consultaCEP() {
+
+    let cep = this.formulario.get('endereco.cep').value;
+
+
+     // Nova variável "cep" somente com dígitos.
+     cep = cep.replace(/\D/g, '');
+
+     // Verifica se campo cep possui valor informado.
+     if (cep !== '') {
+       // Expressão regular para validar o CEP.
+       const validacep = /^[0-9]{8}$/;
+
+       // Valida o formato do CEP.
+       if (validacep.test(cep)) {
+         this.resetaDadosFormulario();
+          this.http.get(`//viacep.com.br/ws/${cep}/json`)
+         // this.httpClient.get(`//viacep.com.br/ws/${cep}/json`)
+          .pipe(map(dados =>  dados))
+          .subscribe(dados => this.populaDadosForm(dados))
+       }
+     }
+
+
+   }
+
+   populaDadosForm(dados){
+    this.formulario.patchValue({
+          endereco: {
+            rua: dados.logradouro ,
+            // cep: dados.cep ,
+            complemento: dados.complemento,
+            bairro: dados.bairro,
+            cidade: dados.localidade,
+            estado: dados.uf
+          }
+
+        });
+
+  }
+
+  resetaDadosFormulario(){
+    this.formulario.patchValue({
+         endereco: {
+           rua: null ,
+           complemento: null,
+           bairro: null,
+           cidade:null,
+           estado:null
+         }
+
+       });
+
+ }
 
 }
 
