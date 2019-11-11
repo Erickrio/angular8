@@ -1,3 +1,4 @@
+import { DropdownService } from './services/dropdown.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CampoControlErroComponent } from './campo-control-erro/campo-control-erro.component';
@@ -16,11 +17,13 @@ import { FormDebugComponent } from './form-debug/form-debug.component';
     CommonModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   exports: [
     FormDebugComponent,
     CampoControlErroComponent
-  ]
+  ],
+  providers: [DropdownService]
 })
 export class SharedModule { }
