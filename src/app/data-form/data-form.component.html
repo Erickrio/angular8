@@ -144,6 +144,18 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <div class="col-md-3" [ngClass]="aplicaCssErro('termos')">
+        <div class="checkbox">
+          <label class="checkbox-inline">
+            <input type="checkbox" formControlName="termos"> Aceito os termos.
+          </label>
+          <app-campo-control-erro [mostrarErro]="verificaValidTouched('termos')"
+        msgErro="Termo é obrigatório."> </app-campo-control-erro>
+        </div>
+      </div>
+    </div>
+
  <!--Somente quando o formulario estiver válido
   <button type="submit" class="btn btn-primary" [disabled]="!formulario.valid">Submit</button>
   -->
