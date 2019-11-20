@@ -16,7 +16,7 @@ export class VerificaEmailService {
       .pipe(
         delay(3000),
         map((dados: {emails:any[]}) => dados.emails),
-        tap(console.log),
+        // tap(console.log),
         map((dados:{ email: string}[]) =>dados.filter (v => v.email === email)),
         // tap(console.log),
 

@@ -10,9 +10,7 @@
     </div>
   </div>
 
-  <app-campo-control-erro [mostrarErro]="verificaValidTouched('nome')" msgErro="Nome é obrigatório.">
-  </app-campo-control-erro>
-
+  <app-error-msg [control]="formulario.get('nome')" label="Nome"></app-error-msg>
 
   <div class="form-group" [ngClass]="aplicaCssErro('email')">
     <div class="col-sm-12">

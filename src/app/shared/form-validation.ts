@@ -1,4 +1,4 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 export class FormValidations {
   static requiredMinCheckbox(min = 1) {
@@ -22,7 +22,7 @@ export class FormValidations {
     return null;
   }
 
-//validação para dois campos . ex senha e confirmação da senha
+  //validação para dois campos . ex senha e confirmação da senha
   static equalsTo(otherField: string) {
     const validator = (formControl: FormControl) => {
       if (otherField == null) {
@@ -42,12 +42,25 @@ export class FormValidations {
       }
 
       if (field.value !== formControl.value) {
-        return { equalsTo : otherField };
+        return { equalsTo: otherField };
       }
 
       return null;
     };
     return validator;
+  }
+
+  // Retorna a msg de acordo com ERRO - serviço de msg de erros para todos os formularios
+  // e mensagem de erro possam ser mostrados de forma consistente
+    static getErrorMsg(fieldName: string, validatorName: string, validatorValue?: any) {
+    const config = {
+      'required': `${fieldName} é obrigatório.`,
+      'minlength': `${fieldName} precisa ter no mínimo ${validatorValue.requiredLength} caracteres.`,
+      'maxlength': `${fieldName} precisa ter no máximo ${validatorValue.requiredLength} caracteres.`,
+      'cepInvalido': 'CEP inválido.',
+    };
+
+    return config[validatorName];
   }
 
 }
