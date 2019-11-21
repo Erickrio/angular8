@@ -25,7 +25,8 @@ export abstract class BaseFormComponent implements OnInit {
       this.verificaValidacoesForm(this.formulario);
     }
   }
-//percorre a arvore de todo o formulario e diz se está tocada ou não.
+
+//Percorre a arvore de todo o formulario e diz se está tocada ou não.
   verificaValidacoesForm(formGroup: FormGroup | FormArray) {
     Object.keys(formGroup.controls).forEach(campo => {
       console.log(campo);
