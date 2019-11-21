@@ -5,8 +5,8 @@ import { DropdownService } from './../shared/services/dropdown.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, tap, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Observable, empty } from 'rxjs';
 import { FormValidations } from '../shared/form-validation';
 
 @Component({
@@ -18,12 +18,12 @@ export class DataFormComponent implements OnInit {
   //tipo form  - formularios reativos
   formulario: FormGroup;
   // estados: EstadoBr[];
-  estados: Observable <EstadoBr[]>;
+  estados: Observable<EstadoBr[]>;
   cargos: any[];
   tecnologias: any[];
   newsletterOp: any[];
 
-  frameworks = ['Angular','React','Vue','Sencha'];
+  frameworks = ['Angular', 'React', 'Vue', 'Sencha'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -47,13 +47,13 @@ export class DataFormComponent implements OnInit {
     this.newsletterOp = this.dropdownService.getNewsletter();
 
     this.formulario = this.formBuilder.group({
-      nome: [null, [Validators.required,Validators.minLength(3),Validators.maxLength(35)]],
-      email: [null, [Validators.required, Validators.email],[this.validarEmail.bind(this)]],
+      nome: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(35)]],
+      email: [null, [Validators.required, Validators.email], [this.validarEmail.bind(this)]],
       confirmarEmail: [null, [FormValidations.equalsTo('email')]],
 
       endereco: this.formBuilder.group({
         cep: [null, [Validators.required,
-          FormValidations.cepValidator]],
+        FormValidations.cepValidator]],
         numero: [null, Validators.required],
         complemento: [null],
         rua: [null, Validators.required],
@@ -67,13 +67,27 @@ export class DataFormComponent implements OnInit {
       termos: [null, Validators.pattern('true')],
       frameworks: this.buildFrameworks()
     });
+
+    this.formulario.get('endereco.cep').statusChanges
+      .pipe(
+        distinctUntilChanged(),
+        tap(value => console.log('status CEP:', value)),
+        switchMap(status => status === 'VALID' ?
+          this.cepService.consultaCEP(this.formulario.get('endereco.cep').value)
+          : empty()
+        )
+      )
+      .subscribe(dados => dados ? this.populaDadosForm(dados) : {});
+
   }
 
 
+
+
   buildFrameworks() {
-   const values = this.frameworks.map(v => new FormControl(false));
-   return this.formBuilder.array(values,FormValidations.requiredMinCheckbox(1));
-   }
+    const values = this.frameworks.map(v => new FormControl(false));
+    return this.formBuilder.array(values, FormValidations.requiredMinCheckbox(1));
+  }
 
 
 
@@ -86,10 +100,10 @@ export class DataFormComponent implements OnInit {
     valueSubmit = Object.assign(valueSubmit,
       {
         frameworks: valueSubmit.frameworks.
-        map((v,i) => v ? this.frameworks[i] : null)
-        .filter(v => v !== null)
+          map((v, i) => v ? this.frameworks[i] : null)
+          .filter(v => v !== null)
       })
-      console.log(valueSubmit);
+    console.log(valueSubmit);
 
     if (this.formulario.valid) {
       this.http.post('https://httpbin.org/post', JSON.stringify(valueSubmit))
@@ -160,7 +174,7 @@ export class DataFormComponent implements OnInit {
 
     if (cep != null && cep !== '') {
       this.cepService.consultaCEP(cep)
-      .subscribe(dados => this.populaDadosForm(dados));
+        .subscribe(dados => this.populaDadosForm(dados));
     }
   }
 
@@ -204,17 +218,17 @@ export class DataFormComponent implements OnInit {
     return obj1 && obj2 ? (obj1.nome === obj2.nome && obj1.nivel === obj2.nivel) : obj1 === obj2;
   }
 
-  setarTecnologias(){
+  setarTecnologias() {
     this.formulario.get('tecnologias').setValue([
-      'Java', 'JavaScript' , 'Php'
+      'Java', 'JavaScript', 'Php'
 
     ])
   }
-    //validação assincrona
-    validarEmail(formControl:FormControl){
-      return this.verificaEmailService.verificarEmail(formControl.value)
-      .pipe(map(emailExiste => emailExiste ? {emailInvalido: true} : null));
-    }
+  //validação assincrona
+  validarEmail(formControl: FormControl) {
+    return this.verificaEmailService.verificarEmail(formControl.value)
+      .pipe(map(emailExiste => emailExiste ? { emailInvalido: true } : null));
+  }
 
 }
 
