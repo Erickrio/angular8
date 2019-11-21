@@ -1,3 +1,4 @@
+import { BaseFormComponent } from './../shared/base-form/base-form.component';
 import { VerificaEmailService } from './services/verifica-email.service';
 import { ConsultaCepService } from './../shared/services/consulta-cep.service';
 import { EstadoBr } from './../shared/models/estado-br';
@@ -14,9 +15,10 @@ import { FormValidations } from '../shared/form-validation';
   templateUrl: './data-form.component.html',
   styleUrls: ['./data-form.component.css']
 })
-export class DataFormComponent implements OnInit {
-  //tipo form  - formularios reativos
-  formulario: FormGroup;
+export class DataFormComponent extends BaseFormComponent implements OnInit {
+  //****TIPO  FORM  - FORMULARIOS REATIVOS
+
+  // formulario: FormGroup;
   // estados: EstadoBr[];
   estados: Observable<EstadoBr[]>;
   cargos: any[];
@@ -32,7 +34,9 @@ export class DataFormComponent implements OnInit {
     private cepService: ConsultaCepService,
     private verificaEmailService: VerificaEmailService
 
-  ) { }
+  ) {
+    super(); //precisa chamar o construtor da classe mae - base-form
+  }
 
 
   ngOnInit() {
@@ -48,8 +52,8 @@ export class DataFormComponent implements OnInit {
 
     this.formulario = this.formBuilder.group({
       nome: [null, [Validators.required,
-                    Validators.minLength(3),
-                    Validators.maxLength(35)]],
+      Validators.minLength(3),
+      Validators.maxLength(35)]],
       email: [null, [Validators.required, Validators.email], [this.validarEmail.bind(this)]],
       confirmarEmail: [null, [FormValidations.equalsTo('email')]],
 
@@ -83,93 +87,43 @@ export class DataFormComponent implements OnInit {
 
   }
 
-
-
-
   buildFrameworks() {
     const values = this.frameworks.map(v => new FormControl(false));
     return this.formBuilder.array(values, FormValidations.requiredMinCheckbox(1));
+    /* this.formBuilder.array( [
+      new FormControl(false), // angular
+      new FormControl(false), // react
+      new FormControl(false), // vue
+      new FormControl(false) // sencha
+    ]); */
   }
+  //É chamado quando o método for válido
 
-
-
-  onSubmit() {
+  submit() {
     console.log(this.formulario);
 
-    let valueSubmit = Object.assign({},
-      this.formulario.value)
+    let valueSubmit = Object.assign({}, this.formulario.value);
 
-    valueSubmit = Object.assign(valueSubmit,
-      {
-        frameworks: valueSubmit.frameworks.
-          map((v, i) => v ? this.frameworks[i] : null)
-          .filter(v => v !== null)
-      })
-    console.log(valueSubmit);
-
-    if (this.formulario.valid) {
-      this.http.post('https://httpbin.org/post', JSON.stringify(valueSubmit))
-        .subscribe(dados => {
-          console.log(dados);
-          //reseta form
-          this.formulario.reset();
-          // this.resetar();
-
-        },
-          (error: any) => alert('erro'));
-
-    } else {
-      console.log('formulario invalido')
-      this.verificaValidacoesForm(this.formulario);
-
-    }
-
-  }
-  // faz validações do formulario - apertando o submit p campos que não forem modificados
-
-  verificaValidacoesForm(formGroup: FormGroup) {
-    Object.keys(formGroup.controls).forEach(campo => {
-      console.log(campo);
-      const controle = formGroup.get(campo);
-      controle.markAsDirty() // dirty - campo modificado
-      if (controle instanceof FormGroup) {
-        // caso seja verificado as validações do form
-        this.verificaValidacoesForm(controle);
-
-      }
+    valueSubmit = Object.assign(valueSubmit, {
+      frameworks: valueSubmit.frameworks
+      .map((v, i) => v ? this.frameworks[i] : null)
+      .filter(v => v !== null)
     });
 
+    console.log(valueSubmit);
+
+    this.http
+        .post('https://httpbin.org/post', JSON.stringify({}))
+        .subscribe(
+          dados => {
+            console.log(dados);
+            // reseta o form
+            // this.formulario.reset();
+            // this.resetar();
+          },
+          (error: any) => alert('erro')
+        );
   }
-
-  resetar() {
-    this.formulario.reset();
-  }
-
-
-  verificaEmailInvalido(campo: string) {
-    let campoEmail = this.formulario.get('email');
-    if (campoEmail.errors) {
-      return campoEmail.errors['email'] && campoEmail.touched;
-    }
-  }
-
-  verificaValidTouched(campo: string) {
-    return !this.formulario.get(campo).valid && (this.formulario.get(campo).touched || this.formulario.get(campo).dirty);
-  }
-
-  verificaRequired(campo: string) {
-    return this.formulario.get(campo).hasError('required') && (this.formulario.get(campo).touched || this.formulario.get(campo).dirty);
-  }
-
-
-
-  aplicaCssErro(campo: string) {
-    return {
-      'has-error': this.verificaValidTouched(campo),
-      'has-feedback': this.verificaValidTouched(campo)
-    }
-  }
-
 
   consultaCEP() {
     const cep = this.formulario.get('endereco.cep').value;
