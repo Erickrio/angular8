@@ -7,10 +7,11 @@
 
     <div class="col-sm-12">
       <input type="text" class="form-control" formControlName="nome" id="nome" placeholder="Nome">
+      <app-error-msg [control]="formulario.get('nome')" label="Nome"></app-error-msg>
     </div>
   </div>
 
-  <app-error-msg [control]="formulario.get('nome')" label="Nome"></app-error-msg>
+
 
   <div class="form-group" [ngClass]="aplicaCssErro('email')">
     <div class="col-sm-12">
@@ -53,7 +54,8 @@
 
       <div class="col-md-3" [ngClass]="aplicaCssErro('endereco.cep')">
         <label for="cep" class="control-label">CEP</label>
-        <input type="text" class="form-control" id="cep" formControlName="cep" (blur)='consultaCEP()'>
+        <!-- Retirando o (blur)='consultaCEP()'> pois não queremos mais tire o foco-->
+        <input type="text" class="form-control" id="cep" formControlName="cep">
         <app-error-msg [control]="formulario.get('endereco.cep')" label="CEP"></app-error-msg>
         <!-- <app-campo-control-erro [mostrarErro]="verificaRequired('endereco.cep')" msgErro="CEP é obrigatório.">
         </app-campo-control-erro>
