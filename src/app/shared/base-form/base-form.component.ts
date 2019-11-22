@@ -7,7 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export abstract class BaseFormComponent implements OnInit {
 
-
   formulario: FormGroup;
 
   constructor() { }
@@ -26,7 +25,6 @@ export abstract class BaseFormComponent implements OnInit {
     }
   }
 
-//Percorre a arvore de todo o formulario e diz se está tocada ou não.
   verificaValidacoesForm(formGroup: FormGroup | FormArray) {
     Object.keys(formGroup.controls).forEach(campo => {
       console.log(campo);
@@ -70,7 +68,6 @@ export abstract class BaseFormComponent implements OnInit {
       'has-feedback': this.verificaValidTouched(campo)
     };
   }
-
 
 
 }
