@@ -3,6 +3,10 @@ http://localhost:3000/cursos
 
 ####
 
+GET http://localhost:3000/cursos/1
+
+###
+
 //Exemplo do Post
 
 POST http://localhost:3000/cursos HTTP/1.1
