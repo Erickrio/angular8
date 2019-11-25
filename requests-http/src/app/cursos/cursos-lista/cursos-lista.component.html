@@ -17,15 +17,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td></td>
-          <td></td>
+        <tr *ngFor="let curso of cursos">
+          <td>{{ curso.id }}</td>
+          <td>{{ curso.nome }}</td>
           <td>
             <span class="float-right">
                 <button class="btn btn-outline-warning mb-1 btn-sm">
                     Atualizar
                   </button>
-                  {{ ' ' }} <!--opção 1 : Espaço entre botões -->
+
                   <button class="btn btn-outline-danger mb-1 btn-sm">
                     Remover
                   </button>

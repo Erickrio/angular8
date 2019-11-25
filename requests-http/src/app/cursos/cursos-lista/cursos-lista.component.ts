@@ -1,3 +1,5 @@
+import { Curso } from './../curso';
+import { CursosService } from './cursos.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,10 +9,16 @@ import { Component, OnInit } from '@angular/core';
   preserveWhitespaces: true // Opção 2 - Espaço entre botoes
 })
 export class CursosListaComponent implements OnInit {
-
-  constructor() { }
+  cursos: Curso[];
+  constructor(private service: CursosService) { }
 
   ngOnInit() {
+    //this.service.list().subscribe(console.log)
+
+    //Inscrição do subscribe - faz dentro do init
+    this.service.list()
+    .subscribe(dados => this.cursos = dados);
+
   }
 
 }
