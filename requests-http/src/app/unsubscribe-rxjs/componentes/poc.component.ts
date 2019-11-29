@@ -30,6 +30,8 @@ export class PocComponent implements OnInit, OnDestroy {
     .subscribe(novoValor => this.valor = novoValor);
 }
   ngOnDestroy(): void {
+    this.unsub$.next(); //ativa a inscrição do observable
+    this.unsub$.complete(); //evita o memory lik
     console.log(`${this.nome} foi destruido`);
 
   }
