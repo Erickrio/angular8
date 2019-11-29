@@ -5,13 +5,14 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class EnviarValorService {
-  //oservable
+
+  //observable
   private emissor$ = new Subject<string>();
 
   emitirValor(valor: string) {
     this.emissor$.next(valor);
   }
-
+  //variavel privada- manter nesse componente
   getValor() {
     return this.emissor$.asObservable();
   }

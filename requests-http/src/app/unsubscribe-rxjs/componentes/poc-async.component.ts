@@ -1,23 +1,33 @@
+import { tap } from 'rxjs/operators';
 import { EnviarValorService } from './../enviar-valor.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs';
 
 
 @Component({
   selector: 'app-poc-async',
   template: `
     <app-poc-base [nome]="nome"
-      [valor]="valor" estilo="bg-success">
+      [valor]="valor$ | async" estilo="bg-success">
     </app-poc-base>
   `
 })
-export class PocAsyncComponent implements OnInit {
+export class PocAsyncComponent implements OnInit ,OnDestroy{
 
   nome = 'Componente com async';
-  valor: string;
+  //observable
+  valor$:Observable <string>;
 
   constructor(private service: EnviarValorService) { }
 
   ngOnInit() {
+   this.valor$ = this.service.getValor()
+    .pipe(tap(v=>console.log(this.nome, v)))
+
+  }
+
+  ngOnDestroy(): void {
+    console.log(`${this.nome} foi destruido`);
 
   }
 

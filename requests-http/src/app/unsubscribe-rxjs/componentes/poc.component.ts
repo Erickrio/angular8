@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { tap, takeUntil } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EnviarValorService } from '../enviar-valor.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-poc',
@@ -9,14 +11,26 @@ import { EnviarValorService } from '../enviar-valor.service';
     </app-poc-base>
   `
 })
-export class PocComponent implements OnInit {
+export class PocComponent implements OnInit, OnDestroy {
 
   nome = 'Componente sem unsubscribe';
   valor: string;
 
+  // criando novo observable
+  unsub$ = new Subject();
+
   constructor(private service: EnviarValorService) { }
 
   ngOnInit() {
+    this.service.getValor()
+    .pipe(
+      tap(v => console.log(this.nome, v)),
+      takeUntil(this.unsub$)
+    )
+    .subscribe(novoValor => this.valor = novoValor);
+}
+  ngOnDestroy(): void {
+    console.log(`${this.nome} foi destruido`);
 
   }
 

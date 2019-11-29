@@ -16,7 +16,7 @@ constructor(private service: EnviarValorService) { }
   }
 
   emitirValor(valor: string){
-
+    this.service.emitirValor(valor);
   }
 
   //muda o valor - true passa ser false(vise e versa)
