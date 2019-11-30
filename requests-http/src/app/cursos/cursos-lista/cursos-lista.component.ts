@@ -25,19 +25,21 @@ export class CursosListaComponent implements OnInit {
 
     //Inscrição do subscribe - faz dentro do init
 
-    // this.service.list()
-    // .subscribe(dados => this.cursos = dados);
+    this.onRefresh();
 
-    //Observable
-    this.cursos$ =  this.service.list()
-    .pipe(
-      catchError(error => {
-        console.error(error);
-        this.error$.next(true);
-        return empty();
-      })
-    );
 
+  }
+
+  onRefresh() {
+      //Observable
+      this.cursos$ =  this.service.list()
+      .pipe(
+        catchError(error => {
+          console.error(error);
+          this.error$.next(true);
+          return empty();
+        })
+      );
   }
 
 }
